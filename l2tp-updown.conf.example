@@ -1,0 +1,4 @@
+## Site configuration options
+
+# Space seperated list of networks reachable via VPN
+remotenetworks="192.168.10.0/24"
