@@ -33,19 +33,19 @@ This has been tested on a Ubiquiti ER/USG device with a L2TP remote access VPN c
 ### Download Main Script ###
 
 > cd /config/scripts  
-> sudo curl -o l2tp-updown.sh https://raw.githubusercontent.com/EvanAnderson/edgeos-l2tp-static-routes/master/l2tp-updown.sh
+> sudo curl -o l2tp-updown.sh https://raw.githubusercontent.com/EvanAnderson/edgeos-l2tp-static-routes/master/l2tp-updown.sh  
 > sudo chmod 755 l2tp-updown.sh  
 > sudo chown root:vyattacfg l2tp-updown.sh  
 
 ### Grab Example config ###
 
 > cd /config/scripts  
-> sudo curl -o l2tp-updown.conf https://raw.githubusercontent.com/EvanAnderson/edgeos-l2tp-static-routes/master/l2tp-updown.conf.example
+> sudo curl -o l2tp-updown.conf https://raw.githubusercontent.com/EvanAnderson/edgeos-l2tp-static-routes/master/l2tp-updown.conf.example  
 
 ### Download Install Script ###
 
 > cd /config/scripts/post-config.d  
-> sudo curl -o l2tp-updown-install.sh https://raw.githubusercontent.com/EvanAnderson/edgeos-l2tp-static-routes/master/l2tp-updown-install.sh
+> sudo curl -o l2tp-updown-install.sh https://raw.githubusercontent.com/EvanAnderson/edgeos-l2tp-static-routes/master/l2tp-updown-install.sh  
 > sudo chmod 755 l2tp-updown-install.sh  
 > sudo chown root:vyattacfg l2tp-updown-install.sh  
 
