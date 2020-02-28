@@ -2,3 +2,6 @@
 
 # Space seperated list of networks reachable via VPN
 remotenetworks="192.168.10.0/24"
+
+# Optionally set the domain / DNS suffix for the VPN connection
+#domain=example.local

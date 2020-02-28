@@ -36,10 +36,10 @@
 #
 config="/config/scripts/l2tp-updown.conf"
 if [ -f ${config} ]; then
-	. ${config}
+    . ${config}
 else
-	echo "Error: Config (${config}) not found."
-	exit 1
+    echo "Error: Config (${config}) not found."
+    exit 1
 fi
 
 #
@@ -48,79 +48,79 @@ fi
 
 # Some functions we use later on to start/stop dnsmasq
 start-dnsmasq() {
-	/usr/sbin/dnsmasq ${dnsmasqopts} \
-	--pid-file="${pidfile}" \
-	--interface=${interface} \
-	${dhcprange} ${dhcpoptions} ${dhcprfcroutes} ${dhcpwinroutes}
+    /usr/sbin/dnsmasq ${dnsmasqopts} \
+    --pid-file="${pidfile}" \
+    --interface=${interface} \
+    ${dhcprange} ${dhcpoptions} ${dhcprfcroutes} ${dhcpwinroutes}
 }
 
 stop-dnsmasq() {
-	if [ -f "${pidfile}" ]; then
-		kill $(cat "${pidfile}")
-	else
-		echo "PID file (${pidfile}) for dnsmasq not found"
-	fi
+    if [ -f "${pidfile}" ]; then
+        kill $(cat "${pidfile}")
+    else
+        echo "PID file (${pidfile}) for dnsmasq not found"
+    fi
 }
 
 atexit() {
-		# If we are in a session then tear it down at exit of script
-		cli-shell-api inSession
-		if [ $? -eq 0 ]; then
-			cli-shell-api teardownSession
-		fi
+        # If we are in a session then tear it down at exit of script
+        cli-shell-api inSession
+        if [ $? -eq 0 ]; then
+            cli-shell-api teardownSession
+        fi
 }
 trap atexit EXIT
 
 get-l2tp-dns-servers() {
-	# Outputs dnsmasq config option for DNS servers based on current config
+    # Outputs dnsmasq config option for DNS servers based on current config
 
-	# Initiate a CLI API session
-	session_env=$(cli-shell-api getSessionEnv $PPID)
-	if [ $? -ne 0 ]; then
-		# Problem with getSessionEnv call
-		return 1
-	fi
-	eval $session_env
+    # Initiate a CLI API session
+    session_env=$(cli-shell-api getSessionEnv $PPID)
+    if [ $? -ne 0 ]; then
+        # Problem with getSessionEnv call
+        return 1
+    fi
+    eval $session_env
 
-	# Setup session
-	cli-shell-api setupSession
-	if [ $? -ne 0 ]; then
-		# Problem with setupSession call
-		return 1
-	fi
-	
-	# Check we are in a CLI session
-	cli-shell-api inSession
-	if [ $? -ne 0 ]; then
-			# No valid session
-	        return 1
-	fi
+    # Setup session
+    cli-shell-api setupSession
+    if [ $? -ne 0 ]; then
+        # Problem with setupSession call
+        return 1
+    fi
+    
+    # Check we are in a CLI session
+    cli-shell-api inSession
+    if [ $? -ne 0 ]; then
+            # No valid session
+            return 1
+    fi
 
-	# Grab list of nodes under vpn "l2tp remote-access dns-servers" 
-	node_list=$(cli-shell-api listNodes vpn l2tp remote-access dns-servers)
-	eval "NODES=($node_list)"
-	n=0
-	# Loop through nodes and print values comma seperated
-	for i in "${NODES[@]}"; do
-		# Get current node
-		server=$(cli-shell-api returnValue vpn l2tp remote-access dns-servers $i)
-		# Check call was successful
-		if [ $? -eq 0 ]; then
-			# First item includes relevan dnsmasq config option
-			if [ ${n} -eq 0 ]; then
-				echo -n "--dhcp-option=6"
-			fi
-			# Print value
-			echo -n ",${server}"
-		fi
-		n=$((n + 1))
-	done
+    # Grab list of nodes under vpn "l2tp remote-access dns-servers" 
+    node_list=$(cli-shell-api listNodes vpn l2tp remote-access dns-servers)
+    eval "NODES=($node_list)"
+    n=0
+    # Loop through nodes and print values comma seperated
+    for i in "${NODES[@]}"; do
+        # Get current node
+        server=$(cli-shell-api returnValue vpn l2tp remote-access dns-servers $i)
+        # Check call was successful
+        if [ $? -eq 0 ]; then
+            # First item includes relevan dnsmasq config option
+            if [ ${n} -eq 0 ]; then
+                echo -n "--dhcp-option=6"
+            fi
+            # Print value
+            echo -n ",${server}"
+        fi
+        n=$((n + 1))
+    done
 
-	# Tear down API session
-	cli-shell-api teardownSession
+    # Tear down API session
+    cli-shell-api teardownSession
 
-	# Return a good status
-	return 0
+    # Return a good status
+    return 0
 }
 
 # Set delay while waiting for DHCPINFORM
@@ -129,22 +129,22 @@ delay=15
 # Check how we were called
 name=$(basename $0)
 case "${name}" in
-	l2tp-up)
-		action="up"
-		;;
-	l2tp-down)
-		action="down"
-		;;
-	*)
-    	echo "Must be called as either: l2tp-up or l2tp-down"
-		exit 1
-		;;
+    l2tp-up)
+        action="up"
+        ;;
+    l2tp-down)
+        action="down"
+        ;;
+    *)
+        echo "Must be called as either: l2tp-up or l2tp-down"
+        exit 1
+        ;;
 esac
 
 # Check we got required arguments (5 or 6 arguments)
 if [ $# -ne 5 ] && [ $# -ne 6 ]; then
-	echo "Usage: $0 interface tty speed localip peerip <ipparam>"
-	exit 1
+    echo "Usage: $0 interface tty speed localip peerip <ipparam>"
+    exit 1
 fi
 
 # Grab supplied arguments we are interested in
@@ -164,40 +164,41 @@ case "${interface}" in
 esac
 
 # Set options for DNSMASQ
-dnsmasqopts="--user=dnsmasq --port=0 --bind-interfaces —-conf-file=/dev/null"
+dnsmasqopts="--user=dnsmasq --port=0 --bind-interfaces --conf-file=/dev/null"
 # DHCP range is just VPN peer
 dhcprange="--dhcp-range=${peerip},${peerip},255.255.255.255"
 # Set name server
 nsoption=$(get-l2tp-dns-servers)
 if [ $? -eq 0 ]; then
-	dhcpoptions="${nsoption}"
+    dhcpoptions="${nsoption}"
 else
-	dhcpoptions=""
+    dhcpoptions=""
 fi
 # PID file
 pidfile="/var/run/dnsmasq/dnsmasq-${interface}.pid"
 
 # Start with blank list of routes
-dhcprfcroutes=""
-dhcpwinroutes=""
+dhcproutes=""
 
 # Go through list of remotenetworks and append correct DHCP options
 for n in ${remotenetworks}; do
-        dhcprfcroutes="${dhcprfcroutes} --dhcp-option=121,${n},${localip}"
-        dhcpwinroutes="${dhcpwinroutes} --dhcp-option=249,${n},${localip}"
+        dhcproutes="${dhcproutes},${n},${localip}"
 done
+
+dhcprfcroutes="--dhcp-option=121${dhcproutes}"
+dhcpwinroutes="--dhcp-option=249${dhcproutes}"
 
 # Run "up" or "down" process as requested
 case "${action}" in
         up)
-				# Start dnsmasq
+                # Start dnsmasq
                 echo "Performing up tasks for ${interface}..."
                 start-dnsmasq
                 sleep ${delay}
                 stop-dnsmasq
                 ;;
         down)
-				# Kill dnsmasq if it's still running (it really shouldn't be)
+                # Kill dnsmasq if it's still running (it really shouldn't be)
                 echo "Performing down tasks for ${interface}..."
                 stop-dnsmasq
                 ;;

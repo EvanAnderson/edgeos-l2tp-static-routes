@@ -12,9 +12,11 @@ This should also work correctly for Linux and MacOS clients as the config handle
 
 Once the interface is taken down, the script is executed via an ip-down.d script to kill the specific instance of dnsmasq.
 
+This code is forked from Andrew Heberle's original code (https://gitlab.com/andrewheberle/edgeos-l2tp-static-routes) and incldues merge requests taken from Phil Ross (https://gitlab.com/philross/edgeos-l2tp-static-routes).
+
 ## Requirements ##
 
-This has only been tested on and Ubiquiti ER/USG device with a L2TP remote access VPN configured.
+This has been tested on a Ubiquiti ER/USG device with a L2TP remote access VPN configured. Windows 7 and Windows 10 clients have been tested.
 
 ## Installation Overview ##
 
@@ -31,19 +33,19 @@ This has only been tested on and Ubiquiti ER/USG device with a L2TP remote acces
 ### Download Main Script ###
 
 > cd /config/scripts  
-> sudo curl -o l2tp-updown.sh https://gitlab.com/andrewheberle/edgeos-l2tp-static-routes/raw/master/l2tp-updown.sh  
+> sudo curl -o l2tp-updown.sh https://raw.githubusercontent.com/EvanAnderson/edgeos-l2tp-static-routes/master/l2tp-updown.sh
 > sudo chmod 755 l2tp-updown.sh  
 > sudo chown root:vyattacfg l2tp-updown.sh  
 
 ### Grab Example config ###
 
 > cd /config/scripts  
-> sudo curl -o l2tp-updown.conf https://gitlab.com/andrewheberle/edgeos-l2tp-static-routes/raw/master/l2tp-updown.conf.example  
+> sudo curl -o l2tp-updown.conf https://raw.githubusercontent.com/EvanAnderson/edgeos-l2tp-static-routes/master/l2tp-updown.conf.example
 
 ### Download Install Script ###
 
 > cd /config/scripts/post-config.d  
-> sudo curl -o l2tp-updown-install.sh https://gitlab.com/andrewheberle/edgeos-l2tp-static-routes/raw/master/l2tp-updown-install.sh  
+> sudo curl -o l2tp-updown-install.sh https://raw.githubusercontent.com/EvanAnderson/edgeos-l2tp-static-routes/master/l2tp-updown-install.sh
 > sudo chmod 755 l2tp-updown-install.sh  
 > sudo chown root:vyattacfg l2tp-updown-install.sh  
 
