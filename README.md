@@ -12,8 +12,6 @@ This should also work correctly for Linux and MacOS clients as the config handle
 
 Once the interface is taken down, the script is executed via an ip-down.d script to kill the specific instance of dnsmasq.
 
-This code is forked from Andrew Heberle's original code (https://gitlab.com/andrewheberle/edgeos-l2tp-static-routes) and incldues merge requests taken from Phil Ross (https://gitlab.com/philross/edgeos-l2tp-static-routes).
-
 ## Requirements ##
 
 This has been tested on a Ubiquiti ER/USG device with a L2TP remote access VPN configured. Windows 7 and Windows 10 clients have been tested.
@@ -60,7 +58,9 @@ This has been tested on a Ubiquiti ER/USG device with a L2TP remote access VPN c
 
 ## Other Notes ##
 
-This started out of desire to push static routes to clients connecting to my home network over L2TP/IPSEC via my Ubiquiti Unifi Security Gateway (which runs Ubiquiti's EdgeOS based firmware), however the only parts that are EdgeOS are the use of "/config/scripts" (to store presistent scripts) and the code in the "get-l2tp-dns-servers" function.
+This code is forked from Andrew Heberle's original code (https://gitlab.com/andrewheberle/edgeos-l2tp-static-routes) and incldues merge requests taken from Phil Ross (https://gitlab.com/philross/edgeos-l2tp-static-routes).
+
+This started out of Andrew Heberle's desire to push static routes to clients connecting to his network over L2TP/IPSEC via a Ubiquiti Unifi Security Gateway (which runs Ubiquiti's EdgeOS based firmware). The only parts that are EdgeOS are the use of "/config/scripts" (to store presistent scripts) and the code in the "get-l2tp-dns-servers" function.
 
 These sections could be easily removed/changed and used on any Linux based VPN gateway using pppd for a L2TP VPN.
 
